@@ -1,0 +1,848 @@
+@extends('layouts.sidebar')
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+@section('content')
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-12" style="margin-top:10px;">
+            <div class="col-md-6" style="float:left;vertical-align:center; height: 45px;">
+                <h1 class="align-middle">Stocks</h1>
+            </div>
+            <div style="float:right;">
+                    {{-- <button class="btn btn-lg btn-success" data-toggle="modal" data-target="#uploadCSVModal">Upload CSV file</button> --}}
+                    <a href="/purchasingSystem/public/add-particular" class="btn btn-lg btn-success">Add New Particular</a>
+            </div>
+        </div>
+        <div class="col-md-12" style="margin-top:20px;">
+            
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="op-tab" data-toggle="tab" href="#op" role="tab" aria-controls="op" aria-selected="true">OP</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="prd-tab" data-toggle="tab" href="#prd" role="tab" aria-controls="prd" aria-selected="false">PRD</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="osx-tab" data-toggle="tab" href="#osx" role="tab" aria-controls="osx" aria-selected="false">OSX</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="brs-tab" data-toggle="tab" href="#brs" role="tab" aria-controls="brs" aria-selected="false">BRS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="rc-tab" data-toggle="tab" href="#rc" role="tab" aria-controls="rc" aria-selected="false">RC</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="wtg-tab" data-toggle="tab" href="#wtg" role="tab" aria-controls="wtg" aria-selected="false">WTG</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="ord-tab" data-toggle="tab" href="#ord" role="tab" aria-controls="ord" aria-selected="false">ORD</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="end-tab" data-toggle="tab" href="#end" role="tab" aria-controls="end" aria-selected="false">END</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="cons-tab" data-toggle="tab" href="#cons" role="tab" aria-controls="cons" aria-selected="false">CONS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="mch-tab" data-toggle="tab" href="#mch" role="tab" aria-controls="mch" aria-selected="false">MCH</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="op" role="tabpanel" aria-labelledby="op-tab">
+                    <div class="col-md-12" style="margin-top: 20px;">
+                        <h3>Oral Prophylaxis (OP)</h3>
+                    </div>
+                    <div class="col-md-12" >
+                        <div class="table-responsive">
+                            <table id="opTBL" class="table">
+                                <thead>
+                                    <tr>
+                                        <th>SKU</th>
+                                        <th>PARTICULAR</th>
+                                        <th>TOTAL AVAILABLE</th>
+                                        <th>ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($opStocks as $opStock)
+                                    <tr>
+                                        <th>{{$opStock->sku}}</th>
+                                        <td>{{$opStock->particular}}</td>
+                                        <td>{{$opStock->totalAvailable}}</td>
+                                        <td>
+                                            <button data-stock_id="{{$opStock->id}}" data-particular="{{$opStock->particular}}" 
+                                            data-brand="{{$opStock->brand}}" data-unit="{{$opStock->unit}}" data-sku="{{$opStock->sku}}" 
+                                            type="button" class="btn btn-info btn-sm" 
+                                            data-toggle="modal" data-target="#showStockModal"><i class="fa fa-eye"></i></button>
+
+                                            <button data-id="{{$opStock->id}}" data-particular="{{$opStock->particular}}" 
+                                            data-brand="{{$opStock->brand}}" data-unit="{{$opStock->unit}}" data-sku="{{$opStock->sku}}" 
+                                            type="button" class="btn btn-warning btn-sm" 
+                                            data-toggle="modal" data-target="#updateStockModal"><i class="fas fa-edit"></i></button>
+
+                                            <button data-stock_id="{{$opStock->id}}" data-particular="{{$opStock->particular}}" 
+                                            data-brand="{{$opStock->brand}}" data-unit="{{$opStock->unit}}" data-sku="{{$opStock->sku}}" 
+                                            data-type="{{$opStock->type}}" data-available="{{$opStock->totalAvailable}}" 
+                                            type="button" class="btn btn-success btn-sm" 
+                                            data-toggle="modal" data-target="#addStockModal"><i class="fa fa-plus"></i></button>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="cons" role="tabpanel" aria-labelledby="cons-tab">
+                    <div class="col-md-12" style="margin-top: 20px;">
+                        <h3>Consumables (CONS)</h3>
+                    </div>
+                    <div class="col-md-12" >
+                        <table id="consTBL" class="table" cellspacing="0" cellpadding="0">
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>PARTICULAR</th>
+                                    <th>TOTAL AVAILABLE</th>
+                                    <th>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($consStocks as $consStock)
+                                <tr>
+                                    <th>{{$consStock->sku}}</th>
+                                    <td>{{$consStock->particular}}</td>
+                                    <td>{{$consStock->totalAvailable}}</td>
+                                    <td>
+                                        <button data-stock_id="{{$consStock->id}}" data-particular="{{$consStock->particular}}" 
+                                        data-brand="{{$consStock->brand}}" data-unit="{{$consStock->unit}}" data-sku="{{$consStock->sku}}" 
+                                        type="button" class="btn btn-info btn-sm" 
+                                        data-toggle="modal" data-target="#showStockModal"><i class="fa fa-eye"></i></button>
+
+                                        <button data-stock_id="{{$consStock->id}}" data-particular="{{$consStock->particular}}" 
+                                        data-brand="{{$consStock->brand}}" data-unit="{{$consStock->unit}}" data-sku="{{$consStock->sku}}" 
+                                        type="button" class="btn btn-warning btn-sm" 
+                                        data-toggle="modal" data-target="#updateStockModal"><i class="fas fa-edit"></i></button>
+
+                                        <button data-stock_id="{{$consStock->id}}" data-particular="{{$consStock->particular}}" 
+                                        data-brand="{{$consStock->brand}}" data-unit="{{$consStock->unit}}" data-sku="{{$consStock->sku}}" 
+                                        type="button" class="btn btn-success btn-sm" 
+                                        data-toggle="modal" data-target="#addStockModal"><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="prd" role="tabpanel" aria-labelledby="prd-tab">
+                    <div class="col-md-12" style="margin-top: 20px;">
+                        <h3>Prosthodontics (PRD)</h3>
+                    </div>
+                    <div class="col-md-12" >
+                        <table id="prdTBL" class="table" cellspacing="0" cellpadding="0">
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>PARTICULAR</th>
+                                    <th>TOTAL AVAILABLE</th>
+                                    <th>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($prdStocks as $prdStock)
+                                <tr>
+                                    <th>{{$prdStock->sku}}</th>
+                                    <td>{{$prdStock->particular}}</td>
+                                    <td>{{$prdStock->totalAvailable}}</td>
+                                    <td>
+                                        <button data-stock_id="{{$prdStock->id}}" data-particular="{{$prdStock->particular}}" 
+                                        data-bra nd="{{$prdStock->brand}}" data-unit="{{$prdStock->unit}}" data-sku="{{$prdStock->sku}}" 
+                                        type="button" class="btn btn-info btn-sm" 
+                                        data-toggle="modal" data-target="#showStockModal"><i class="fa fa-eye"></i></button>
+
+                                        <button data-stock_id="{{$prdStock->id}}" data-particular="{{$prdStock->particular}}" 
+                                        data-brand="{{$prdStock->brand}}" data-unit="{{$prdStock->unit}}" data-sku="{{$prdStock->sku}}" 
+                                        type="button" class="btn btn-warning btn-sm" 
+                                        data-toggle="modal" data-target="#updateStockModal"><i class="fas fa-edit"></i></button>
+
+                                        <button data-stock_id="{{$prdStock->id}}" data-particular="{{$prdStock->particular}}" 
+                                        data-brand="{{$prdStock->brand}}" data-unit="{{$prdStock->unit}}" data-sku="{{$prdStock->sku}}" 
+                                        type="button" class="btn btn-success btn-sm" 
+                                        data-toggle="modal" data-target="#addStockModal"><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="osx" role="tabpanel" aria-labelledby="osx-tab">
+                    <div class="col-md-12" style="margin-top: 20px;">
+                        <h3>Oral Surgery (OSX)</h3>
+                    </div>
+                    <div class="col-md-12" >
+                        <table id="osxTBL" class="table" cellspacing="0" cellpadding="0">
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>PARTICULAR</th>
+                                    <th>TOTAL AVAILABLE</th>
+                                    <th>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($osxStocks as $osxStock)
+                                <tr>
+                                    <th>{{$osxStock->sku}}</th>
+                                    <td>{{$osxStock->particular}}</td>
+                                    <td>{{$osxStock->totalAvailable}}</td>
+                                    <td>
+                                        <button data-stock_id="{{$osxStock->id}}" data-particular="{{$osxStock->particular}}" 
+                                        data-brand="{{$osxStock->brand}}" data-unit="{{$osxStock->unit}}" data-sku="{{$osxStock->sku}}" 
+                                        type="button" class="btn btn-info btn-sm" 
+                                        data-toggle="modal" data-target="#showStockModal"><i class="fa fa-eye"></i></button>
+
+                                        <button data-stock_id="{{$osxStock->id}}" data-particular="{{$osxStock->particular}}" 
+                                        data-brand="{{$osxStock->brand}}" data-unit="{{$osxStock->unit}}" data-sku="{{$osxStock->sku}}" 
+                                        type="button" class="btn btn-warning btn-sm" 
+                                        data-toggle="modal" data-target="#updateStockModal"><i class="fas fa-edit"></i></button>
+
+                                        <button data-stock_id="{{$osxStock->id}}" data-particular="{{$osxStock->particular}}" 
+                                        data-brand="{{$osxStock->brand}}" data-unit="{{$osxStock->unit}}" data-sku="{{$osxStock->sku}}" 
+                                        type="button" class="btn btn-success btn-sm" 
+                                        data-toggle="modal" data-target="#addStockModal"><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="brs" role="tabpanel" aria-labelledby="brs-tab">
+                    <div class="col-md-12" style="margin-top: 20px;">
+                        <h3>All kind of Burs (BRS)</h3>
+                    </div>
+                    <div class="col-md-12" >
+                        <table id="brsTBL" class="table" cellspacing="0" cellpadding="0">
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>PARTICULAR</th>
+                                    <th>TOTAL AVAILABLE</th>
+                                    <th>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($brsStocks as $brsStock)
+                                <tr>
+                                    <th>{{$brsStock->sku}}</th>
+                                    <td>{{$brsStock->particular}}</td>
+                                    <td>{{$brsStock->totalAvailable}}</td>
+                                    <td>
+                                        <button data-stock_id="{{$brsStock->id}}" data-particular="{{$brsStock->particular}}" 
+                                        data-brand="{{$brsStock->brand}}" data-unit="{{$brsStock->unit}}" data-sku="{{$brsStock->sku}}" 
+                                        type="button" class="btn btn-info btn-sm" 
+                                        data-toggle="modal" data-target="#showStockModal"><i class="fa fa-eye"></i></button>
+
+                                        <button data-stock_id="{{$brsStock->id}}" data-particular="{{$brsStock->particular}}" 
+                                        data-brand="{{$brsStock->brand}}" data-unit="{{$brsStock->unit}}" data-sku="{{$brsStock->sku}}" 
+                                        type="button" class="btn btn-warning btn-sm" 
+                                        data-toggle="modal" data-target="#updateStockModal"><i class="fas fa-edit"></i></button>
+
+                                        <button data-stock_id="{{$brsStock->id}}" data-particular="{{$brsStock->particular}}" 
+                                        data-brand="{{$brsStock->brand}}" data-unit="{{$brsStock->unit}}" data-sku="{{$brsStock->sku}}" 
+                                        type="button" class="btn btn-success btn-sm" 
+                                        data-toggle="modal" data-target="#addStockModal"><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="rc" role="tabpanel" aria-labelledby="rc-tab">
+                    <div class="col-md-12" style="margin-top: 20px;">
+                        <h3>Resto - Cosmetic (RC)</h3>
+                    </div>
+                    <div class="col-md-12" >
+                        <table id="mchTBL" class="table" cellspacing="0" cellpadding="0">
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>PARTICULAR</th>
+                                    <th>TOTAL AVAILABLE</th>
+                                    <th>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($rcStocks as $rcStock)
+                                <tr>
+                                    <th>{{$rcStock->sku}}</th>
+                                    <td>{{$rcStock->particular}}</td>
+                                    <td>{{$rcStock->totalAvailable}}</td>
+                                    <td>
+                                        <button data-stock_id="{{$rcStock->id}}" data-particular="{{$rcStock->particular}}" 
+                                        data-brand="{{$rcStock->brand}}" data-unit="{{$rcStock->unit}}" data-sku="{{$rcStock->sku}}" 
+                                        type="button" class="btn btn-info btn-sm" 
+                                        data-toggle="modal" data-target="#showStockModal"><i class="fa fa-eye"></i></button>
+
+                                        <button data-stock_id="{{$rcStock->id}}" data-particular="{{$rcStock->particular}}" 
+                                        data-brand="{{$rcStock->brand}}" data-unit="{{$rcStock->unit}}" data-sku="{{$rcStock->sku}}" 
+                                        type="button" class="btn btn-warning btn-sm" 
+                                        data-toggle="modal" data-target="#updateStockModal"><i class="fas fa-edit"></i></button>
+
+                                        <button data-stock_id="{{$rcStock->id}}" data-particular="{{$rcStock->particular}}" 
+                                        data-brand="{{$rcStock->brand}}" data-unit="{{$rcStock->unit}}" data-sku="{{$rcStock->sku}}" 
+                                        type="button" class="btn btn-success btn-sm" 
+                                        data-toggle="modal" data-target="#addStockModal"><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="wtg" role="tabpanel" aria-labelledby="wtg-tab">
+                    <div class="col-md-12" style="margin-top: 20px;">
+                        <h3>Whitening (WTG)</h3>
+                    </div>
+                    <div class="col-md-12" >
+                        <table id="wtgTBL" class="table" cellspacing="0" cellpadding="0">
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>PARTICULAR</th>
+                                    <th>TOTAL AVAILABLE</th>
+                                    <th>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($wtgStocks as $wtgStock)
+                                <tr>
+                                    <th>{{$wtgStock->sku}}</th>
+                                    <td>{{$wtgStock->particular}}</td>
+                                    <td>{{$wtgStock->totalAvailable}}</td>
+                                    <td>
+                                        <button data-stock_id="{{$wtgStock->id}}" data-particular="{{$wtgStock->particular}}" 
+                                        data-brand="{{$wtgStock->brand}}" data-unit="{{$wtgStock->unit}}" data-sku="{{$wtgStock->sku}}" 
+                                        type="button" class="btn btn-info btn-sm" 
+                                        data-toggle="modal" data-target="#showStockModal"><i class="fa fa-eye"></i></button>
+
+                                        <button data-stock_id="{{$wtgStock->id}}" data-particular="{{$wtgStock->particular}}" 
+                                        data-brand="{{$wtgStock->brand}}" data-unit="{{$wtgStock->unit}}" data-sku="{{$wtgStock->sku}}" 
+                                        type="button" class="btn btn-warning btn-sm" 
+                                        data-toggle="modal" data-target="#updateStockModal"><i class="fas fa-edit"></i></button>
+
+                                        <button data-stock_id="{{$wtgStock->id}}" data-particular="{{$wtgStock->particular}}" 
+                                        data-brand="{{$wtgStock->brand}}" data-unit="{{$wtgStock->unit}}" data-sku="{{$wtgStock->sku}}" 
+                                        type="button" class="btn btn-success btn-sm" 
+                                        data-toggle="modal" data-target="#addStockModal"><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="ord" role="tabpanel" aria-labelledby="ord-tab">
+                    <div class="col-md-12" style="margin-top: 20px;">
+                        <h3>Orthodontics (ORD)</h3>
+                    </div>
+                    <div class="col-md-12" >
+                        <table id="ordTBL" class="table" cellspacing="0" cellpadding="0">
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>PARTICULAR</th>
+                                    <th>TOTAL AVAILABLE</th>
+                                    <th>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($ordStocks as $ordStock)
+                                <tr>
+                                    <th>{{$ordStock->sku}}</th>
+                                    <td>{{$ordStock->particular}}</td>
+                                    <td>{{$ordStock->totalAvailable}}</td>
+                                    <td>
+                                        <button data-stock_id="{{$ordStock->id}}" data-particular="{{$ordStock->particular}}" 
+                                        data-brand="{{$ordStock->brand}}" data-unit="{{$ordStock->unit}}" data-sku="{{$ordStock->sku}}" 
+                                        type="button" class="btn btn-info btn-sm" 
+                                        data-toggle="modal" data-target="#showStockModal"><i class="fa fa-eye"></i></button>
+
+                                        <button data-stock_id="{{$ordStock->id}}" data-particular="{{$ordStock->particular}}" 
+                                        data-brand="{{$ordStock->brand}}" data-unit="{{$ordStock->unit}}" data-sku="{{$ordStock->sku}}" 
+                                        type="button" class="btn btn-warning btn-sm" 
+                                        data-toggle="modal" data-target="#updateStockModal"><i class="fas fa-edit"></i></button>
+
+                                        <button data-stock_id="{{$ordStock->id}}" data-particular="{{$ordStock->particular}}" 
+                                        data-brand="{{$ordStock->brand}}" data-unit="{{$ordStock->unit}}" data-sku="{{$ordStock->sku}}" 
+                                        type="button" class="btn btn-success btn-sm" 
+                                        data-toggle="modal" data-target="#addStockModal"><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="end" role="tabpanel" aria-labelledby="end-tab">
+                    <div class="col-md-12" style="margin-top: 20px;">
+                        <h3>Endodontics (END)</h3>
+                    </div>
+                    <div class="col-md-12" >
+                        <table id="endTBL" class="table" cellspacing="0" cellpadding="0">
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>PARTICULAR</th>
+                                    <th>TOTAL AVAILABLE</th>
+                                    <th>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($endStocks as $endStock)
+                                <tr>
+                                    <th>{{$endStock->sku}}</th>
+                                    <td>{{$endStock->particular}}</td>
+                                    <td>{{$endStock->totalAvailable}}</td>
+                                    <td>
+                                        <button data-stock_id="{{$endStock->id}}" data-particular="{{$endStock->particular}}" 
+                                        data-brand="{{$endStock->brand}}" data-unit="{{$endStock->unit}}" data-sku="{{$endStock->sku}}" 
+                                        type="button" class="btn btn-info btn-sm" 
+                                        data-toggle="modal" data-target="#showStockModal"><i class="fa fa-eye"></i></button>
+
+                                        <button data-stock_id="{{$endStock->id}}" data-particular="{{$endStock->particular}}" 
+                                        data-brand="{{$endStock->brand}}" data-unit="{{$endStock->unit}}" data-sku="{{$endStock->sku}}" 
+                                        type="button" class="btn btn-warning btn-sm" 
+                                        data-toggle="modal" data-target="#updateStockModal"><i class="fas fa-edit"></i></button>
+
+                                        <button data-stock_id="{{$endStock->id}}" data-particular="{{$endStock->particular}}" 
+                                        data-brand="{{$endStock->brand}}" data-unit="{{$endStock->unit}}" data-sku="{{$endStock->sku}}" 
+                                        type="button" class="btn btn-success btn-sm" 
+                                        data-toggle="modal" data-target="#addStockModal"><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="mch" role="tabpanel" aria-labelledby="mch-tab">
+                    <div class="col-md-12" style="margin-top: 20px;">
+                        <h3>All kinds of Machineries (MCH)</h3>
+                    </div>
+                    <div class="col-md-12" >
+                        <table id="mchTBL" class="table" cellspacing="0" cellpadding="0">
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>PARTICULAR</th>
+                                    <th>TOTAL AVAILABLE</th>
+                                    <th>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($mchStocks as $mchStock)
+                                <tr>
+                                    <th>{{$mchStock->sku}}</th>
+                                    <td>{{$mchStock->particular}}</td>
+                                    <td>{{$mchStock->totalAvailable}}</td>
+                                    <td>
+                                        <button data-stock_id="{{$mchStock->id}}" data-particular="{{$mchStock->particular}}" 
+                                        data-brand="{{$mchStock->brand}}" data-unit="{{$mchStock->unit}}" data-sku="{{$mchStock->sku}}" 
+                                        type="button" class="btn btn-info btn-sm" 
+                                        data-toggle="modal" data-target="#showStockModal"><i class="fa fa-eye"></i></button>
+
+                                        <button data-stock_id="{{$mchStock->id}}" data-particular="{{$mchStock->particular}}" 
+                                        data-brand="{{$mchStock->brand}}" data-unit="{{$mchStock->unit}}" data-sku="{{$mchStock->sku}}" 
+                                        type="button" class="btn btn-warning btn-sm" 
+                                        data-toggle="modal" data-target="#updateStockModal"><i class="fas fa-edit"></i></button>
+
+                                        <button data-stock_id="{{$mchStock->id}}" data-particular="{{$mchStock->particular}}" 
+                                        data-brand="{{$mchStock->brand}}" data-unit="{{$mchStock->unit}}" data-sku="{{$mchStock->sku}}" 
+                                        type="button" class="btn btn-success btn-sm" 
+                                        data-toggle="modal" data-target="#addStockModal"><i class="fa fa-plus"></i></button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+  
+{{-- UPLOAD CSV MODAL --}}
+<div class="modal fade" id="uploadCSVModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+        {{-- action {{ route('import-csv') }} --}}
+            <form action="{{ route('import-csv') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Upload CSV file</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="type">Select Particular Type First</label>
+                        <select name="type" id="type" class="form-control">
+                            <option value="" selected disabled>Nothing Selected</option>
+                            <option value="OP">Oral Prophylaxis (OP)</option>
+                            <option value="CONS">Consumables (CONS)</option>
+                            <option value="PRD">Prosthodontics (PRD)</option>
+                            <option value="OSX">Oral Surgery (OSX)</option>
+                            <option value="RC">Resto - Cleaning (RC)</option>
+                            <option value="BRS">All Kinds of Burs (BRS)</option>
+                            <option value="WTG">Whitening (WTG)</option>
+                            <option value="ORD">Orthodontics (ORD)</option>
+                            <option value="END">Endodontics (END)</option>
+                            <option value="MCH">All kinds of Machineries (MCH)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="file">Select CSV file</label>
+                        <input type="file" name="file" id="file" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-success" value="Submit">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- SHOW STOCK MODAL--}}
+<div class="modal fade" id="showStockModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form action="" method="POST">
+                @csrf
+                <input type="hidden" name="_method" value="PATCH">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Stock Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group row">
+                        
+                        <label for="particular" class="col-md-2 col-form-label">Particular:</label>
+                        
+                        <div class="col-md-4">
+                            <input id="particular" type="text" class="form-control" name="particular" readonly >
+                        </div>
+                        
+                        <label for="totalAvailable" class="col-md-3 col-form-label offset-md-1">Total Available:</label>
+        
+                        <div class="col-md-2">
+                            <input id="totalAvailable" type="text" class="form-control" name="totalAvailable" readonly >
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="sku" class="col-md-1 col-form-label">SKU:</label>
+        
+                        <div class="col-md-3">
+                            <input id="sku" type="text" class="form-control" name="sku" readonly >
+                        </div>
+
+                        <label for="brand" class="col-md-1 col-form-label">Brand:</label>
+        
+                        <div class="col-md-3">
+                            <input id="brand" type="text" class="form-control" name="brand" readonly >
+                        </div>
+                        
+                        <label for="unit" class="col-md-1 col-form-label">Unit:</label>
+        
+                        <div class="col-md-3">
+                            <input id="unit" type="text" class="form-control" name="unit" readonly >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Expirations</th>
+                                    <th>Pieces</th>
+                                </tr>
+                            </thead>
+                            <tbody id="exp">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- UPDATE STOCK MODAL --}}
+<div class="modal fade" id="updateStockModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Update Particular</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            <form class="form-horizontal" role="form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="SKU">SKU</label>
+                        <input id="editsku" name="sku" type="text" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="particular">Particular</label>
+                        <input id="editparticular" name="particular" type="text" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="brand">Brand</label>
+                        <input id="editbrand" name="brand" type="text" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="unit">Unit</label>
+                        <input id="editunit" name="unit" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success ml-auto" id="edit"> Save </button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{{-- ADD STOCK MODAL --}}
+<div class="modal fade" id="addStockModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">wao</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="form-horizontal" role="form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="SKU">SKU</label>
+                        <input id="addsku" name="sku" type="text" class="form-control" readonly>
+                        <input id="addbrand" name="brand" type="hidden" class="form-control" readonly>
+                        <input id="addunit" name="unit" type="hidden" class="form-control" readonly>
+                        <input id="addtype" name="type" type="hidden" class="form-control" readonly>
+                        <input id="currentavailable" name="available" type="hidden" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="particular">Particular</label>
+                        <input id="addparticular" name="particular" type="text" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">                
+                        <label for="expiration">Expiration:</label>
+                        <input id="expiration" name="expiration" type="date" class="form-control">
+                        <input type="checkbox" id="expchecker" name="expchecker">
+                        <label for="expchecker">No Expiration</label><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="available">Total number of pcs</label>
+                        <input id="available" name="available" type="number" class="form-control" placeholder="0">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success ml-auto" id="add"> Save </button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+// ADD/DELETE ROW IN TABLE
+$(document).ready(function(){
+
+var count = 1;
+
+$(document).on('click', '#add', function(){
+count++;
+
+    $('input[name="casecount"]').val(count);
+
+        var html = '';
+        html = '<tr id="row' + count + '" class="item">';
+        html += '<td><input id="particulars'+count+'" name="particulars[]" type="text" placeholder="Particular '+count+'" style="text-align:center;">';
+        html += '<td><input id="brands'+count+'" name="brands[]" type="text" placeholder="Brand '+count+'" style="text-align:center;">';
+        html += '<td><input id="units'+count+'" name="units[]" type="text" placeholder="Unit '+count+'" style="text-align:center;">';
+        html += '<td><input id="availables'+count+'" name="availables[]" type="text" placeholder="Available '+count+'" style="text-align:center;">';
+        html += '<td class="text-center"><button type="button" name="remove" class="btn btn-danger remove text-center">Remove</button></td></tr>';
+        html += '</tr>';
+        $('#addParticularTable').append(html);
+        $('.selectpicker').selectpicker('refresh');
+    });
+
+    $(document).on('click', '.remove', function(){   
+        $(this).closest("tr").remove();
+        count--;
+        $('input[name="casecount"]').val(count);
+    });
+});
+
+$('#updateStockModal').on('show.bs.modal', function(event){
+    var button = $(event.relatedTarget)
+    var particular = button.data('particular')
+    var brand = button.data('brand')
+    var unit = button.data('unit')
+    var available = button.data('available')
+    var sku = button.data('sku')
+
+    var modal = $(this)
+
+    modal.find('.modal-title').text('Update Stock');
+    modal.find('.modal-body #editparticular').val(particular);
+    modal.find('.modal-body #editbrand').val(brand);
+    modal.find('.modal-body #editunit').val(unit);
+    modal.find('.modal-body #editavailable').val(available);
+    modal.find('.modal-body #editsku').val(sku);
+})
+
+$(document).on('click', '#edit', function(){
+    var unit =  $('#editunit').val();
+    var brand =  $('#editbrand').val();
+    var sku =  $('#editsku').val();
+
+    $.ajax({
+        type: 'POST',
+        url: './editStock',
+        data: {
+            '_token': $('input[name=_token]').val(),
+            'sku': sku,
+            'unit': unit,
+            'brand': brand,
+        },
+        
+        success: function(data){
+        $('.modal-backdrop').remove();
+            alert('Updated Successfuly!')
+            location.reload();
+        }
+    });
+});
+
+$('#showStockModal').on('show.bs.modal', function(event){
+    var button = $(event.relatedTarget)
+    var sku = button.data('sku')
+    var exp = "";
+    var modal = $(this)
+
+    $.ajax({
+        type:'get',
+        url:'{!!URL::to('findStock')!!}',
+        data:{'sku':sku},
+        dataType:'json', //return data will be json
+        success:function(data){
+        console.log(data)
+
+        for(var i = 1; i <= data.count; i++){
+            if(data[i] != null){
+                exp+='<tr><td>'+data[i].expiration+'</td><td>'+data[i].available+'</td></tr>';
+            }
+        }
+
+        modal.find('.modal-title').text('Stock Details');
+        modal.find('.modal-body #particular').val(data[0].particular);
+        modal.find('.modal-body #brand').val(data[0].brand);
+        modal.find('.modal-body #unit').val(data[0].unit);
+        modal.find('.modal-body #sku').val(data[0].sku);
+        modal.find('.modal-body #totalAvailable').val(data.totalAvailable);
+        modal.find('.modal-body #exp').html(" ");
+        modal.find('.modal-body #exp').append(exp);
+        }
+    });
+})
+
+$('#addStockModal').on('show.bs.modal', function(event){
+    var button = $(event.relatedTarget)
+    var particular = button.data('particular')
+    var brand = button.data('brand')
+    var unit = button.data('unit')
+    var type = button.data('type')
+    var available = button.data('available')
+    var sku = button.data('sku')
+
+    var modal = $(this)
+
+    modal.find('.modal-title').text('Add Stock');
+    modal.find('.modal-body #addparticular').val(particular);
+    modal.find('.modal-body #addbrand').val(brand);
+    modal.find('.modal-body #addunit').val(unit);
+    modal.find('.modal-body #addtype').val(type);
+    modal.find('.modal-body #addavailable').val(available);
+    modal.find('.modal-body #addsku').val(sku);
+})
+
+$(document).on('click', '#add', function(){
+    var sku =  $('#addsku').val();
+    var particular =  $('#addparticular').val();
+    var brand =  $('#addbrand').val();
+    var unit =  $('#addunit').val();
+    var type =  $('#addtype').val();
+    var currentavailable =  $('#currentavailable').val();
+    var available =  $('#available').val();
+    var expiration =  $('#expiration').val();
+    var checker = document.getElementById('expchecker');
+    var expchecker = checker.checked;
+    console.log(exp);
+    $.ajax({
+        type: 'POST',
+        url: './addStock',
+        data: {
+            '_token': $('input[name=_token]').val(),
+            'sku': sku,
+            'particular': particular,
+            'brand': brand,
+            'unit': unit,
+            'type': type,
+            'currentavailable': currentavailable,
+            'available': available,
+            'expiration': expiration,
+            'expchecker': expchecker,
+        },
+        
+        success: function(data){
+        $('.modal-backdrop').remove();
+            alert('Added Successfuly!')
+            location.reload();
+        }
+    });
+});
+
+
+var msg = '{{Session::get('alert')}}';
+var exist = '{{Session::has('alert')}}';
+if(exist){
+alert(msg);
+}
+</script>
+@endsection
